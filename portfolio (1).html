@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajay | Video Editor & Colorist</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #08080a; --bg2: #0f0f12; --bg3: #16161a;
+  --accent: #c9a84c; --accent2: #e8c96a;
+  --text: #ede8df; --muted: #6b6760;
+  --border: rgba(201,168,76,0.15);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-weight: 300; overflow-x: hidden; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  padding: 1.1rem 5vw; display: flex; justify-content: space-between; align-items: center;
+  background: linear-gradient(to bottom, rgba(8,8,10,0.97) 0%, transparent 100%);
+  backdrop-filter: blur(8px);
+}
+.nav-logo { font-family: var(--serif); font-size: 1.6rem; font-weight: 300; color: var(--text); text-decoration: none; }
+.nav-logo span { color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 2.5rem; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; transition: color 0.2s; }
+.nav-links a:hover { color: var(--accent); }
+.nav-cta { padding: 0.5rem 1.4rem; border: 0.5px solid var(--accent); color: var(--accent); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+.nav-cta:hover { background: var(--accent); color: var(--bg); }
+
+/* CAROUSEL HERO */
+.carousel-hero { position: relative; width: 100%; height: 100vh; overflow: hidden; background: #000; }
+.carousel-track { display: flex; height: 100%; transition: transform 0.85s cubic-bezier(0.77,0,0.18,1); will-change: transform; }
+.carousel-slide { position: relative; min-width: 100%; height: 100%; overflow: hidden; }
+
+.slide-thumb {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  transition: transform 8s linear;
+  filter: brightness(0.42);
+}
+.carousel-slide.active .slide-thumb { transform: scale(1.07); }
+
+.slide-vignette {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 100% 90% at 50% 105%, rgba(8,8,10,0.98) 0%, transparent 55%),
+    linear-gradient(to right, rgba(8,8,10,0.75) 0%, transparent 55%),
+    linear-gradient(to top, rgba(8,8,10,0.5) 0%, transparent 40%);
+}
+
+.slide-iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: none; display: none; z-index: 5;
+}
+
+.slide-play-zone {
+  position: absolute; inset: 0; z-index: 6; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.3s;
+}
+.carousel-slide:hover .slide-play-zone { opacity: 1; }
+.big-play-btn {
+  width: 76px; height: 76px; border: 1.5px solid rgba(201,168,76,0.55); border-radius: 50%;
+  background: rgba(8,8,10,0.55); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.25s, transform 0.25s; cursor: pointer;
+}
+.big-play-btn:hover { background: var(--accent); transform: scale(1.12); }
+.big-play-btn svg { width: 26px; height: 26px; fill: var(--accent); margin-left: 5px; }
+.big-play-btn:hover svg { fill: var(--bg); }
+
+.slide-content {
+  position: absolute; bottom: 9rem; left: 6vw; z-index: 10; max-width: 600px;
+}
+.slide-tag {
+  font-size: 0.64rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.slide-tag::before { content: ''; display: block; width: 26px; height: 0.5px; background: var(--accent); }
+.slide-title {
+  font-family: var(--serif); font-size: clamp(2.6rem, 5.5vw, 5.2rem); font-weight: 300;
+  line-height: 0.97; color: var(--text); margin-bottom: 1.1rem;
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.65s 0.1s, transform 0.65s 0.1s;
+}
+.slide-desc {
+  font-size: 0.84rem; color: rgba(237,232,223,0.5); line-height: 1.75; max-width: 420px;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.5s 0.28s, transform 0.5s 0.28s;
+}
+.carousel-slide.active .slide-title,
+.carousel-slide.active .slide-desc { opacity: 1; transform: translateY(0); }
+
+.carousel-controls {
+  position: absolute; bottom: 3.5rem; left: 6vw; right: 6vw;
+  display: flex; align-items: center; gap: 1.5rem; z-index: 20;
+}
+.carousel-dots { display: flex; gap: 0.5rem; flex: 1; }
+.dot { width: 28px; height: 1.5px; background: rgba(201,168,76,0.25); cursor: pointer; transition: background 0.3s, width 0.4s; }
+.dot.active { background: var(--accent); width: 54px; }
+.carousel-nav { display: flex; gap: 0.6rem; }
+.c-btn {
+  width: 42px; height: 42px; border: 0.5px solid var(--border); background: rgba(8,8,10,0.65);
+  color: var(--muted); font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; backdrop-filter: blur(6px);
+}
+.c-btn:hover { border-color: var(--accent); color: var(--accent); }
+.slide-counter { font-size: 0.68rem; letter-spacing: 0.12em; color: var(--muted); font-family: var(--serif); white-space: nowrap; }
+.carousel-progress { position: absolute; bottom: 0; left: 0; height: 1.5px; background: var(--accent); width: 0%; z-index: 20; }
+
+/* DIVIDER */
+.divider { width: 100%; height: 0.5px; background: var(--border); }
+
+/* BEFORE / AFTER */
+.ba-section { padding: 5rem 5vw; background: var(--bg2); }
+.section-tag { font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+.section-title { font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 300; line-height: 1.1; margin-bottom: 2.5rem; }
+
+.ba-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; border: 0.5px solid var(--border); overflow: hidden; }
+.ba-pane { position: relative; aspect-ratio: 16/9; background: #0a0a0c; overflow: hidden; cursor: pointer; }
+.ba-pane-bg { position: absolute; inset: 0; background: linear-gradient(135deg,#0d0d14,#151520); }
+.ba-pane iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; display: none; }
+.ba-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 3; transition: opacity 0.3s; }
+.ba-play .play-btn { width: 50px; height: 50px; border: 1.5px solid var(--accent); border-radius: 50%; background: rgba(8,8,10,0.5); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.ba-pane:hover .play-btn { background: var(--accent); }
+.ba-play svg { width: 16px; height: 16px; fill: var(--accent); margin-left: 3px; }
+.ba-pane:hover .ba-play svg { fill: var(--bg); }
+.ba-label { position: absolute; bottom: 0.75rem; left: 0.75rem; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.22rem 0.65rem; background: rgba(8,8,10,0.85); z-index: 4; pointer-events: none; }
+.ba-label.before { color: var(--muted); border: 0.5px solid var(--muted); }
+.ba-label.after { color: var(--accent); border: 0.5px solid var(--accent); }
+.ba-note { margin-top: 1.25rem; font-size: 0.78rem; color: var(--muted); line-height: 1.7; }
+
+/* TECH STACK */
+.tech-section { padding: 5rem 5vw; }
+.tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1px; background: var(--border); border: 0.5px solid var(--border); margin-top: 2.5rem; }
+.tech-card { background: var(--bg); padding: 1.75rem 1.5rem; position: relative; overflow: hidden; transition: background 0.3s; }
+.tech-card::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 160% 130% at 50% 130%, rgba(201,168,76,0.06), transparent); opacity: 0; transition: opacity 0.4s; }
+.tech-card:hover { background: var(--bg3); }
+.tech-card:hover::after { opacity: 1; }
+.tech-line { width: 20px; height: 0.5px; background: var(--accent); margin-bottom: 1.1rem; }
+.tech-icon { width: 34px; height: 34px; margin-bottom: 1rem; }
+.tech-icon svg { width: 100%; height: 100%; }
+.tech-name { font-size: 0.87rem; font-weight: 500; color: var(--text); margin-bottom: 0.35rem; }
+.tech-role { font-size: 0.69rem; color: var(--muted); line-height: 1.55; }
+
+/* CINEMATIC ELEMENTS */
+.cine-section { padding: 4rem 5vw; background: var(--bg2); }
+.cine-grid { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 2rem; }
+.cine-pill { padding: 0.42rem 1.15rem; border: 0.5px solid var(--border); font-size: 0.7rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); transition: all 0.25s; cursor: default; }
+.cine-pill:hover { border-color: var(--accent); color: var(--accent); background: rgba(201,168,76,0.04); }
+.cine-pill.hot { border-color: rgba(201,168,76,0.38); color: var(--accent); }
+
+/* ABOUT */
+.about-section { padding: 5rem 5vw; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+.about-text p { color: var(--muted); font-size: 0.92rem; line-height: 1.9; margin-bottom: 1.1rem; }
+.stat-row { display: flex; gap: 2.5rem; margin-top: 2.25rem; }
+.stat-num { font-family: var(--serif); font-size: 3.2rem; font-weight: 300; color: var(--accent); line-height: 1; }
+.stat-label { font-size: 0.66rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); margin-top: 0.2rem; }
+.quote-card { padding: 2rem 2rem 2rem; border: 0.5px solid var(--border); background: var(--bg2); }
+.quote-mark { font-family: var(--serif); font-size: 4.5rem; font-weight: 300; color: var(--accent); line-height: 1; opacity: 0.35; margin-bottom: 1rem; }
+.quote-text { font-family: var(--serif); font-size: 1.3rem; font-weight: 300; line-height: 1.65; color: var(--text); font-style: italic; }
+.quote-attr { margin-top: 1.5rem; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+/* CONTACT */
+.contact-section { padding: 6rem 5vw; background: var(--bg2); text-align: center; }
+.contact-section .section-title { margin-bottom: 0.75rem; }
+.contact-sub { color: var(--muted); font-size: 0.87rem; max-width: 380px; margin: 0 auto 3rem; line-height: 1.8; }
+.contact-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; max-width: 720px; margin: 0 auto; }
+.contact-card { display: flex; align-items: center; gap: 0.85rem; padding: 1rem 1.75rem; border: 0.5px solid var(--border); color: var(--muted); text-decoration: none; font-size: 0.73rem; letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.25s; background: var(--bg3); }
+.contact-card:hover { border-color: var(--accent); color: var(--accent); background: rgba(201,168,76,0.04); }
+.contact-card svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+footer { padding: 2rem 5vw; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; font-size: 0.67rem; color: var(--muted); align-items: center; }
+
+@media (max-width: 700px) {
+  .nav-links, .nav-cta { display: none; }
+  .about-section { grid-template-columns: 1fr; gap: 2.5rem; }
+  .ba-wrap { grid-template-columns: 1fr; }
+  .slide-content { bottom: 8rem; left: 5vw; }
+  .stat-row { gap: 1.5rem; }
+  .tech-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Ajay<span>.</span></a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#tech">Stack</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="mailto:ajay.pentakoti@gmail.com" class="nav-cta">Hire Me</a>
+  </div>
+</nav>
+
+<!-- CAROUSEL HERO -->
+<div class="carousel-hero" id="carousel">
+  <div class="carousel-track" id="track">
+
+    <!-- Slide 1: Logo Launch -->
+    <div class="carousel-slide active" data-id="HrNItS0cfNc">
+      <div class="slide-thumb" style="background-image:url('https://img.youtube.com/vi/HrNItS0cfNc/maxresdefault.jpg')"></div>
+      <div class="slide-vignette"></div>
+      <iframe class="slide-iframe" id="yt_0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      <div class="slide-play-zone">
+        <div class="big-play-btn" onclick="playSlide(0)">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="slide-content">
+        <div class="slide-tag">Motion Graphics · After Effects</div>
+        <div class="slide-title">Logo Launch<br>Promo</div>
+        <div class="slide-desc">Kinetic type & logo reveal — built frame by frame in After Effects with custom expressions and motion curves.</div>
+      </div>
+    </div>
+
+    <!-- Slide 2: Brand Launch -->
+    <div class="carousel-slide" data-id="cjYp6YWXNos">
+      <div class="slide-thumb" style="background-image:url('https://img.youtube.com/vi/cjYp6YWXNos/maxresdefault.jpg')"></div>
+      <div class="slide-vignette"></div>
+      <iframe class="slide-iframe" id="yt_1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      <div class="slide-play-zone">
+        <div class="big-play-btn" onclick="playSlide(1)">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="slide-content">
+        <div class="slide-tag">Brand Promo · DaVinci Resolve</div>
+        <div class="slide-title">Brand Launch<br>Video</div>
+        <div class="slide-desc">Full brand story — pacing, color, and sound design unified into one cinematic arc.</div>
+      </div>
+    </div>
+
+    <!-- Slide 3: The Samurai -->
+    <div class="carousel-slide" data-id="DhajpQ5rsk8">
+      <div class="slide-thumb" style="background-image:url('https://img.youtube.com/vi/DhajpQ5rsk8/maxresdefault.jpg')"></div>
+      <div class="slide-vignette"></div>
+      <iframe class="slide-iframe" id="yt_2" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      <div class="slide-play-zone">
+        <div class="big-play-btn" onclick="playSlide(2)">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="slide-content">
+        <div class="slide-tag">Unreal Engine 5 · Cinematic Render</div>
+        <div class="slide-title">The Samurai</div>
+        <div class="slide-desc">Real-time cinematic rendered inside Unreal Engine 5 — Lumen lighting, Nanite geometry, full sequencer pipeline.</div>
+      </div>
+    </div>
+
+    <!-- Slide 4: UE Animation -->
+    <div class="carousel-slide" data-id="gc_R5py2kNM">
+      <div class="slide-thumb" style="background-image:url('https://img.youtube.com/vi/gc_R5py2kNM/maxresdefault.jpg')"></div>
+      <div class="slide-vignette"></div>
+      <iframe class="slide-iframe" id="yt_3" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      <div class="slide-play-zone">
+        <div class="big-play-btn" onclick="playSlide(3)">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="slide-content">
+        <div class="slide-tag">Unreal Engine 5 · Animation</div>
+        <div class="slide-title">Animation &<br>Structure Build</div>
+        <div class="slide-desc">Architectural animation & sequencer work — from blueprint to final render in the Unreal pipeline.</div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Event Promo -->
+    <div class="carousel-slide" data-id="4WGxEBy7wBU">
+      <div class="slide-thumb" style="background-image:url('https://img.youtube.com/vi/4WGxEBy7wBU/maxresdefault.jpg')"></div>
+      <div class="slide-vignette"></div>
+      <iframe class="slide-iframe" id="yt_4" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      <div class="slide-play-zone">
+        <div class="big-play-btn" onclick="playSlide(4)">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="slide-content">
+        <div class="slide-tag">Event Highlight · Motion</div>
+        <div class="slide-title">PV STUD Connect<br>Event Promo</div>
+        <div class="slide-desc">High-energy event promo — dynamic cuts, motion overlays, color pulled to punch hard on screen.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <div class="carousel-controls">
+    <div class="carousel-dots" id="dots"></div>
+    <div class="slide-counter" id="counter">01 / 05</div>
+    <div class="carousel-nav">
+      <button class="c-btn" onclick="moveCarousel(-1)">&#8592;</button>
+      <button class="c-btn" onclick="moveCarousel(1)">&#8594;</button>
+    </div>
+  </div>
+  <div class="carousel-progress" id="progressBar"></div>
+</div>
+
+<div class="divider"></div>
+
+<!-- BEFORE / AFTER -->
+<section class="ba-section" id="work">
+  <div class="section-tag">Color Grading — Before / After</div>
+  <h2 class="section-title">Log Raw vs<br>DaVinci Graded</h2>
+  <div class="ba-wrap">
+    <div class="ba-pane" id="pane_b">
+      <div class="ba-pane-bg" style="background-image: url('https://img.youtube.com/vi/TRsMTQVqHKM/maxresdefault.jpg'); background-size: cover; background-position: center;"></div>
+      <div class="ba-play" id="play_b">
+        <div class="play-btn" onclick="playPane('pane_b','TRsMTQVqHKM','play_b')">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="ba-label before">Before — Apple Log / Ungraded</div>
+      <iframe id="iframe_pane_b" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    </div>
+    <div class="ba-pane" id="pane_a">
+      <div class="ba-pane-bg" style="background-image: url('https://img.youtube.com/vi/mobURL7Umj8/maxresdefault.jpg'); background-size: cover; background-position: center;"></div>
+      <div class="ba-play" id="play_a">
+        <div class="play-btn" onclick="playPane('pane_a','mobURL7Umj8','play_a')">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="ba-label after">After — DaVinci Resolve Graded</div>
+      <iframe id="iframe_pane_a" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    </div>
+  </div>
+  <p class="ba-note">Click either side to play. Same scene, same camera — left is raw Apple Log, right is the full DaVinci Resolve grade with custom DCTL node tree and Digital Intermediate pipeline.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- TECH STACK -->
+<section class="tech-section" id="tech">
+  <div class="section-tag">Tools & Pipeline</div>
+  <h2 class="section-title">What I work in</h2>
+  <div class="tech-grid">
+
+    <div class="tech-card">
+      <div class="tech-line"></div>
+      <div class="tech-icon">
+        <svg viewBox="0 0 34 34" fill="none">
+          <path d="M5 26L17 8l12 18H5z" stroke="#c9a84c" stroke-width="1.2" fill="none"/>
+          <circle cx="17" cy="19" r="3.5" fill="#c9a84c" opacity="0.55"/>
+        </svg>
+      </div>
+      <div class="tech-name">DaVinci Resolve</div>
+      <div class="tech-role">Color Grading · Digital Intermediate · Edit Timeline · Fusion VFX</div>
+    </div>
+
+    <div class="tech-card">
+      <div class="tech-line"></div>
+      <div class="tech-icon">
+        <svg viewBox="0 0 34 34" fill="none">
+          <rect x="6" y="10" width="22" height="14" rx="1.5" stroke="#c9a84c" stroke-width="1.2" fill="none"/>
+          <path d="M11 17l4-4 4 4 4-4" stroke="#c9a84c" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="tech-name">After Effects</div>
+      <div class="tech-role">Motion Graphics · Compositing · Kinetic Type · Expressions</div>
+    </div>
+
+    <div class="tech-card">
+      <div class="tech-line"></div>
+      <div class="tech-icon">
+        <svg viewBox="0 0 34 34" fill="none">
+          <polygon points="17,6 30,26 4,26" stroke="#c9a84c" stroke-width="1.2" fill="none"/>
+          <line x1="17" y1="14" x2="17" y2="22" stroke="#c9a84c" stroke-width="0.9" opacity="0.55"/>
+          <circle cx="17" cy="26" r="2" fill="#c9a84c" opacity="0.55"/>
+        </svg>
+      </div>
+      <div class="tech-name">Unreal Engine 5</div>
+      <div class="tech-role">Cinematic Sequencer · Lumen · Nanite · Real-time Render</div>
+    </div>
+
+    <div class="tech-card">
+      <div class="tech-line"></div>
+      <div class="tech-icon">
+        <svg viewBox="0 0 34 34" fill="none">
+          <rect x="7" y="12" width="20" height="10" rx="1" stroke="#c9a84c" stroke-width="1.1" fill="none"/>
+          <line x1="12" y1="12" x2="12" y2="22" stroke="#c9a84c" stroke-width="0.8" opacity="0.45"/>
+          <line x1="17" y1="12" x2="17" y2="22" stroke="#c9a84c" stroke-width="0.8" opacity="0.45"/>
+          <line x1="22" y1="12" x2="22" y2="22" stroke="#c9a84c" stroke-width="0.8" opacity="0.45"/>
+        </svg>
+      </div>
+      <div class="tech-name">DCTL Scripting</div>
+      <div class="tech-role">Custom LUT Logic · Color Space Transforms · Node Automation</div>
+    </div>
+
+    <div class="tech-card">
+      <div class="tech-line"></div>
+      <div class="tech-icon">
+        <svg viewBox="0 0 34 34" fill="none">
+          <circle cx="17" cy="17" r="9" stroke="#c9a84c" stroke-width="1.1" fill="none"/>
+          <circle cx="17" cy="17" r="3" fill="#c9a84c" opacity="0.55"/>
+          <line x1="17" y1="8" x2="17" y2="5" stroke="#c9a84c" stroke-width="1"/>
+          <line x1="17" y1="26" x2="17" y2="29" stroke="#c9a84c" stroke-width="1"/>
+          <line x1="8" y1="17" x2="5" y2="17" stroke="#c9a84c" stroke-width="1"/>
+          <line x1="26" y1="17" x2="29" y2="17" stroke="#c9a84c" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="tech-name">Premiere Pro</div>
+      <div class="tech-role">Timeline Editing · Multicam · Sequence Assembly · Export</div>
+    </div>
+
+    <div class="tech-card">
+      <div class="tech-line"></div>
+      <div class="tech-icon">
+        <svg viewBox="0 0 34 34" fill="none">
+          <path d="M7 17 Q12 8 17 17 Q22 26 27 17" stroke="#c9a84c" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          <circle cx="7" cy="17" r="1.8" fill="#c9a84c" opacity="0.6"/>
+          <circle cx="27" cy="17" r="1.8" fill="#c9a84c" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="tech-name">Motion Graphics</div>
+      <div class="tech-role">Title Sequences · Animated Overlays · Lower Thirds · Transitions</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CINEMATIC ELEMENTS -->
+<section class="cine-section">
+  <div class="section-tag">Cinematic Craft</div>
+  <h2 class="section-title">Elements I work with</h2>
+  <div class="cine-grid">
+    <div class="cine-pill hot">Log Footage Handling</div>
+    <div class="cine-pill hot">Digital Intermediate</div>
+    <div class="cine-pill hot">Color Science</div>
+    <div class="cine-pill">Apple Log</div>
+    <div class="cine-pill">ACES Color Space</div>
+    <div class="cine-pill">Lumen Global Illumination</div>
+    <div class="cine-pill">Nanite Geometry</div>
+    <div class="cine-pill">Cinematic Sequencer</div>
+    <div class="cine-pill hot">Node-based Grading</div>
+    <div class="cine-pill">Custom DCTL Scripts</div>
+    <div class="cine-pill">Film Grain & Texture</div>
+    <div class="cine-pill">LUT Design</div>
+    <div class="cine-pill">Kinetic Typography</div>
+    <div class="cine-pill">Sound Design Sync</div>
+    <div class="cine-pill">Highlight Recovery</div>
+    <div class="cine-pill">Shadow Rolloff</div>
+    <div class="cine-pill hot">Real-time Render</div>
+    <div class="cine-pill">Blueprint Scripting</div>
+    <div class="cine-pill">Multicam Editing</div>
+    <div class="cine-pill">Dynamic Cuts</div>
+    <div class="cine-pill">Exposure Matching</div>
+    <div class="cine-pill">HDR Delivery</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="about-text">
+    <div class="section-tag">About</div>
+    <h2 class="section-title">Every frame<br>is a choice.</h2>
+    <p>I'm Ajay — a video editor and cinematic colorist based in Hyderabad. I work across DaVinci Resolve, After Effects, and Unreal Engine 5 pipelines — from log footage to a final DI grade, from motion graphics to real-time 3D cinematics.</p>
+    <p>Intentional craft. Clean pipeline. Cinematic result — every time.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num">7+</div><div class="stat-label">Projects</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Pipelines</div></div>
+      <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Frames Graded</div></div>
+    </div>
+  </div>
+  <div class="quote-card">
+    <div class="quote-mark">"</div>
+    <div class="quote-text">Color isn't correction — it's the last layer of storytelling. I treat every grade like a performance.</div>
+    <div class="quote-attr">— Ajay Pentakoti, Colorist & Editor</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-tag">Contact</div>
+  <h2 class="section-title">Let's make<br>something cinematic.</h2>
+  <p class="contact-sub">Open for freelance editing, color grading, motion graphics, and Unreal Engine projects.</p>
+  <div class="contact-grid">
+    <a href="mailto:ajay.pentakoti@gmail.com" class="contact-card">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      ajay.pentakoti@gmail.com
+    </a>
+    <a href="https://wa.me/919063512631" target="_blank" class="contact-card">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp · +91 90635 12631
+    </a>
+    <a href="https://www.instagram.com/norxynorzy" target="_blank" class="contact-card">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      @norxynorzy
+    </a>
+    <a href="https://www.linkedin.com/in/ajay-pentakoti-840b52324/" target="_blank" class="contact-card">
+      <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      LinkedIn
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Ajay Pentakoti. All rights reserved.</span>
+  <span>Hyderabad, India</span>
+</footer>
+
+<script>
+// ── CAROUSEL ENGINE ──
+const slides = document.querySelectorAll('.carousel-slide');
+const track = document.getElementById('track');
+const dotsEl = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const progressBar = document.getElementById('progressBar');
+const TOTAL = slides.length;
+let current = 0;
+let autoTimer = null;
+
+// Build dots
+slides.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+});
+
+function updateUI() {
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===current));
+  counter.textContent = String(current+1).padStart(2,'0') + ' / ' + String(TOTAL).padStart(2,'0');
+}
+
+function goTo(idx) {
+  slides[current].classList.remove('active');
+  current = ((idx % TOTAL) + TOTAL) % TOTAL;
+  slides[current].classList.add('active');
+  track.style.transform = `translateX(-${current * 100}%)`;
+  updateUI();
+  resetProgress();
+}
+
+function moveCarousel(dir) { goTo(current + dir); }
+
+function resetProgress() {
+  clearTimeout(autoTimer);
+  progressBar.style.transition = 'none';
+  progressBar.style.width = '0%';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    progressBar.style.transition = 'width 5s linear';
+    progressBar.style.width = '100%';
+  }));
+  autoTimer = setTimeout(() => goTo(current + 1), 5000);
+}
+
+function playSlide(idx) {
+  const iframe = document.getElementById('yt_' + idx);
+  const vid = slides[idx].dataset.id;
+  iframe.src = 'https://www.youtube.com/embed/' + vid + '?autoplay=1&modestbranding=1&controls=1&fs=1';
+  iframe.style.display = 'block';
+  const pz = slides[idx].querySelector('.slide-play-zone');
+  if (pz) { pz.style.opacity='0'; pz.style.pointerEvents='none'; }
+  // pause auto on play
+  clearTimeout(autoTimer);
+  progressBar.style.transition = 'none';
+  progressBar.style.width = '0%';
+}
+
+// keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') moveCarousel(1);
+  if (e.key === 'ArrowLeft')  moveCarousel(-1);
+});
+
+// touch/swipe
+let touchStartX = 0;
+document.getElementById('carousel').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
+document.getElementById('carousel').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) moveCarousel(dx < 0 ? 1 : -1);
+});
+
+// init
+resetProgress();
+updateUI();
+
+// ── BEFORE / AFTER ──
+function playPane(paneId, vidId, playId) {
+  const iframe = document.getElementById('iframe_' + paneId);
+  iframe.src = 'https://www.youtube.com/embed/' + vidId + '?autoplay=1&modestbranding=1&controls=1&fs=1';
+  iframe.style.display = 'block';
+  const p = document.getElementById(playId);
+  if (p) { p.style.opacity='0'; p.style.pointerEvents='none'; }
+}
+</script>
+</body>
+</html>
