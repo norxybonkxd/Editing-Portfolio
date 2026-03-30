@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Norxy — Video Editing Portfolio</title>
+  <meta name="description" content="Professional video editor specializing in cinematic edits, motion graphics, and storytelling. View my portfolio and get in touch." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+</head>
+<body>
+
+  <!-- ===== Navigation ===== -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a class="nav__logo" href="#hero">Norxy<span>.</span></a>
+    <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav__links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <section id="hero" class="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="hero__content">
+      <span class="hero__tag">Video Editor &amp; Motion Designer</span>
+      <h1 class="hero__title">
+        Bringing Stories<br>
+        <span class="highlight">To Life</span>
+      </h1>
+      <p class="hero__subtitle">
+        I craft cinematic edits, engaging content, and motion graphics that captivate audiences and elevate your brand's visual identity.
+      </p>
+      <div class="hero__cta">
+        <a href="#work" class="btn btn--primary">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M2 3l12 5-12 5V3z"/></svg>
+          View My Work
+        </a>
+        <a href="#contact" class="btn btn--outline">Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">
+      <div class="hero__scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ===== About ===== -->
+  <section id="about" class="about">
+    <div class="about__inner">
+      <div class="about__image-wrap reveal">
+        <div class="about__image-placeholder" role="img" aria-label="Profile photo placeholder">🎬</div>
+      </div>
+      <div class="about__text reveal">
+        <span class="section-label">About Me</span>
+        <h2 class="section-title">Passionate About <span>Visual Storytelling</span></h2>
+        <p class="about__desc">
+          I'm Norxy — a dedicated video editor with a passion for creating immersive, high-quality video content. From short-form social media clips to long-form cinematic pieces, I bring technical skill and creative vision to every project.
+        </p>
+        <p class="about__desc">
+          My workflow blends precision cutting, color grading, and sound design to produce content that not only looks stunning but genuinely connects with viewers.
+        </p>
+
+        <div class="about__stats">
+          <div class="stat">
+            <div class="stat__number">50+</div>
+            <div class="stat__label">Projects Completed</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number">3+</div>
+            <div class="stat__label">Years Experience</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number">100%</div>
+            <div class="stat__label">Client Satisfaction</div>
+          </div>
+        </div>
+
+        <div class="skills-grid">
+          <span class="skill-tag">Premiere Pro</span>
+          <span class="skill-tag">After Effects</span>
+          <span class="skill-tag">DaVinci Resolve</span>
+          <span class="skill-tag">Color Grading</span>
+          <span class="skill-tag">Motion Graphics</span>
+          <span class="skill-tag">Sound Design</span>
+          <span class="skill-tag">Transitions</span>
+          <span class="skill-tag">VFX</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Work ===== -->
+  <section id="work">
+    <div class="work">
+      <header class="section-header reveal">
+        <span class="section-label">Portfolio</span>
+        <h2 class="section-title">Featured <span>Work</span></h2>
+      </header>
+
+      <div class="work-filters reveal">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="cinematic">Cinematic</button>
+        <button class="filter-btn" data-filter="social">Social Media</button>
+        <button class="filter-btn" data-filter="gaming">Gaming</button>
+        <button class="filter-btn" data-filter="commercial">Commercial</button>
+      </div>
+
+      <div class="work-grid">
+
+        <!-- Card 1 -->
+        <article class="work-card reveal" data-category="cinematic" tabindex="0" role="button" aria-label="Open: Cinematic Travel Montage">
+          <div class="work-card__thumb">
+            <div class="work-card__thumb-placeholder" aria-hidden="true">🌄</div>
+            <div class="work-card__play" aria-hidden="true">
+              <div class="play-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__category">Cinematic</div>
+            <h3 class="work-card__title">Cinematic Travel Montage</h3>
+            <p class="work-card__desc">A sweeping travel edit featuring dynamic cuts, aerial footage, and a custom color grade that evokes adventure and wanderlust.</p>
+            <div class="work-card__meta">
+              <span class="work-card__meta-dot"></span>
+              <span>Adobe Premiere Pro · After Effects</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="work-card reveal" data-category="gaming" tabindex="0" role="button" aria-label="Open: Esports Highlight Reel">
+          <div class="work-card__thumb">
+            <div class="work-card__thumb-placeholder" aria-hidden="true">🎮</div>
+            <div class="work-card__play" aria-hidden="true">
+              <div class="play-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__category">Gaming</div>
+            <h3 class="work-card__title">Esports Highlight Reel</h3>
+            <p class="work-card__desc">High-energy montage with synced music cuts, zoom effects, and custom motion graphics for a competitive gaming team.</p>
+            <div class="work-card__meta">
+              <span class="work-card__meta-dot"></span>
+              <span>DaVinci Resolve · Sound Design</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="work-card reveal" data-category="social" tabindex="0" role="button" aria-label="Open: Instagram Reels Pack">
+          <div class="work-card__thumb">
+            <div class="work-card__thumb-placeholder" aria-hidden="true">📱</div>
+            <div class="work-card__play" aria-hidden="true">
+              <div class="play-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__category">Social Media</div>
+            <h3 class="work-card__title">Instagram Reels Pack</h3>
+            <p class="work-card__desc">A batch of short-form vertical videos optimized for maximum engagement — snappy pacing, trending audio, and bold text overlays.</p>
+            <div class="work-card__meta">
+              <span class="work-card__meta-dot"></span>
+              <span>Premiere Pro · Motion Graphics</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="work-card reveal" data-category="commercial" tabindex="0" role="button" aria-label="Open: Product Launch Ad">
+          <div class="work-card__thumb">
+            <div class="work-card__thumb-placeholder" aria-hidden="true">📦</div>
+            <div class="work-card__play" aria-hidden="true">
+              <div class="play-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__category">Commercial</div>
+            <h3 class="work-card__title">Product Launch Ad</h3>
+            <p class="work-card__desc">A polished 30-second commercial combining product close-ups, kinetic typography, and a high-energy soundtrack to drive conversions.</p>
+            <div class="work-card__meta">
+              <span class="work-card__meta-dot"></span>
+              <span>After Effects · Color Grading</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="work-card reveal" data-category="cinematic" tabindex="0" role="button" aria-label="Open: Short Film Edit">
+          <div class="work-card__thumb">
+            <div class="work-card__thumb-placeholder" aria-hidden="true">🎞️</div>
+            <div class="work-card__play" aria-hidden="true">
+              <div class="play-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__category">Cinematic</div>
+            <h3 class="work-card__title">Short Film Edit</h3>
+            <p class="work-card__desc">Narrative editing with deliberate pacing, emotional score integration, and subtle VFX touches to enhance storytelling.</p>
+            <div class="work-card__meta">
+              <span class="work-card__meta-dot"></span>
+              <span>DaVinci Resolve · VFX</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 6 -->
+        <article class="work-card reveal" data-category="social" tabindex="0" role="button" aria-label="Open: YouTube Channel Trailer">
+          <div class="work-card__thumb">
+            <div class="work-card__thumb-placeholder" aria-hidden="true">▶️</div>
+            <div class="work-card__play" aria-hidden="true">
+              <div class="play-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__category">Social Media</div>
+            <h3 class="work-card__title">YouTube Channel Trailer</h3>
+            <p class="work-card__desc">An engaging channel intro designed to hook new viewers within the first 5 seconds, showcasing the creator's personality and content style.</p>
+            <div class="work-card__meta">
+              <span class="work-card__meta-dot"></span>
+              <span>Premiere Pro · Transitions</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Services ===== -->
+  <section id="services" class="services">
+    <div class="services__inner">
+      <header class="section-header reveal">
+        <span class="section-label">What I Offer</span>
+        <h2 class="section-title">My <span>Services</span></h2>
+      </header>
+
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="service-card__icon">✂️</div>
+          <h3 class="service-card__title">Video Editing</h3>
+          <p class="service-card__desc">Professional cutting and assembly of raw footage into compelling, polished videos with smooth transitions and perfect pacing.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-card__icon">🎨</div>
+          <h3 class="service-card__title">Color Grading</h3>
+          <p class="service-card__desc">Transform the mood of your footage with cinematic color grades, from warm and vibrant to cool and moody looks.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-card__icon">⚡</div>
+          <h3 class="service-card__title">Motion Graphics</h3>
+          <p class="service-card__desc">Eye-catching animated titles, lower thirds, intros, and outros that give your content a professional edge.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-card__icon">🔊</div>
+          <h3 class="service-card__title">Sound Design</h3>
+          <p class="service-card__desc">Audio mixing, sound effects, music synchronization, and voice-over integration to perfect your video's sonic experience.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-card__icon">📲</div>
+          <h3 class="service-card__title">Social Media Content</h3>
+          <p class="service-card__desc">Short-form content optimized for TikTok, Instagram Reels, and YouTube Shorts — designed to maximize views and engagement.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-card__icon">🎯</div>
+          <h3 class="service-card__title">Commercial Ads</h3>
+          <p class="service-card__desc">Branded video ads that tell your story, highlight your product, and compel your audience to take action.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section id="contact">
+    <div class="contact__inner">
+      <header class="section-header reveal">
+        <span class="section-label">Get In Touch</span>
+        <h2 class="section-title">Let's Work <span>Together</span></h2>
+      </header>
+      <p class="contact__desc reveal">
+        Have a project in mind? I'd love to hear about it. Fill out the form below and I'll get back to you within 24 hours.
+      </p>
+
+      <form id="contactForm" class="contact__form reveal" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" placeholder="John Doe" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="john@example.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="service">Service Needed</label>
+          <select id="service" name="service">
+            <option value="" disabled selected>Select a service…</option>
+            <option value="editing">Video Editing</option>
+            <option value="color">Color Grading</option>
+            <option value="motion">Motion Graphics</option>
+            <option value="sound">Sound Design</option>
+            <option value="social">Social Media Content</option>
+            <option value="commercial">Commercial Ad</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Project Details</label>
+          <textarea id="message" name="message" placeholder="Tell me about your project — timeline, style, references, etc." required></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="btn btn--primary">Send Message</button>
+        </div>
+        <div class="form-success" role="alert">
+          ✅ Message sent! I'll be in touch within 24 hours.
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="footer__social">
+      <a href="#" aria-label="YouTube" title="YouTube">▶</a>
+      <a href="#" aria-label="Instagram" title="Instagram">📸</a>
+      <a href="#" aria-label="Twitter / X" title="Twitter">𝕏</a>
+      <a href="#" aria-label="Discord" title="Discord">💬</a>
+    </div>
+    <p>© 2025 Norxy · Video Editing Portfolio</p>
+  </footer>
+
+  <!-- ===== Modal ===== -->
+  <div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-wrap">
+      <button class="modal__close" aria-label="Close modal">✕</button>
+      <div class="modal">
+        <div class="modal__video" aria-hidden="true"></div>
+        <div class="modal__body">
+          <div class="modal__category"></div>
+          <h3 class="modal__title" id="modalTitle"></h3>
+          <p class="modal__desc"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
